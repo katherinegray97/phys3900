@@ -35,7 +35,7 @@ class PlotData(object):
                 
                 
         """
-        
+        # Equatorial coord system
         self.ra = ra
         self.dec = dec
         self.z = z
@@ -43,20 +43,22 @@ class PlotData(object):
 
         # Cartersion coord system 
         dec = np.pi / 2 - dec
-        self.x = snp.sin(ra) * np.sin(dec) * z
+        self.x = np.sin(ra)* np.sin(dec) * z 
         self.y = np.cos(ra) * np.sin(dec) * z
         self.z = np.cos(dec) * z
+        
+ 
 
         
 data = np.load("des_thinned.npy")
-des = PlotData(np.array(data[:,0]),np.array(data[:,1]),np.array(data[:2,]))
-
-
 numpoints = 100000
- 
+des = PlotData(np.array(data[0:numpoints,0]),np.array(data[0:numpoints,1]),np.array(data[0:numpoints,2]))
+
 ax.scatter(des.x,des.y,des.z,c='b')
 
-print 'Executed in:', time.time()-start, 'secs' 
+sprint 'Executed in:', time.time()-start, 'secs' 
+
+
 
 
  
