@@ -1,5 +1,3 @@
-#!/usr/bin/env python2
-# -*- coding: utf-8 -*-
 """
 Created on Thu Jul 12 10:42:33 2018
 
@@ -21,42 +19,52 @@ ax.set_ylabel('y')
 ax.set_zlabel('z')
 
 class PlotData(object): 
-     def __init__(self, ra, dec, z):
-        """
-        The plotting data for each point in a survey 
+    def __init__(self, ra, dec, z):
+         """
+         The plotting data for each point in a survey 
+         
+         Params
+         ra:  np.ndarray
+             right ascension of each point
+         dec: np.ndarray
+             declination of each point
+         z:   np.ndarray
+             redshift of each point
+         """
+         self.length = len(ra)
         
-        Params
-        ra:  np.ndarray
-                right ascension of each point
-        dec: np.ndarray
-                declination of each point
-        z:   np.ndarray
-                redshift of each point
-                
-                
-        """
-        # Equatorial coord system
-        self.ra = ra
-        self.dec = dec
-        self.z = z
-   
-
-        # Cartersion coord system 
-        dec = np.pi / 2 - dec
-        self.x = np.sin(ra)* np.sin(dec) * z 
-        self.y = np.cos(ra) * np.sin(dec) * z
-        self.z = np.cos(dec) * z
+         # Opacity 
+         self.alpha = np.ones(self.length)
+         # Size of points 
+         self.size = np.ones(self.length)
         
- 
-
+         # Equatorial coord system
+         self.ra = ra
+         self.dec = dec
+         self.z = z
+        
+        
+         # Cartersion coord system 
+         self.x = np.sin(ra)* np.sin(dec) * z 
+         self.y = np.cos(ra) * np.sin(dec) * z
+         self.z = np.cos(dec) * z
+           
+    
+    def translate(self, obs_x, obs_y, obs_z, obs_theta, obs_azimuth):
+        self.x = self.x + 1000
+            
         
 data = np.load("des_thinned.npy")
-numpoints = 100000
+numpoints = 100
 des = PlotData(np.array(data[0:numpoints,0]),np.array(data[0:numpoints,1]),np.array(data[0:numpoints,2]))
 
 ax.scatter(des.x,des.y,des.z,c='b')
 
-sprint 'Executed in:', time.time()-start, 'secs' 
+translate(1,2,2,2,2)
+
+ax.scatter(des.x,des.y,des.z,c='g')
+
+#print ('Executed in:' time.time()-start, 'secs')
 
 
 
