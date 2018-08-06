@@ -23,7 +23,8 @@ class PlotData(object):
     def __init__(self, ra, dec, z):
          """
          The plotting data for point in a survey. Points are stored as
-         Cartesian coordinates.
+         Cartesian coordinates. Observer is initially at origin, looking down
+         x axis.
 
          Params
          ra:  np.ndarray
@@ -46,33 +47,44 @@ class PlotData(object):
 
          self.obs_x = 0
          self.obs_y = 0
-         self.obs_z = np.pi
+         self.obs_z = 0
+         self.obs_theta = 0
+         self.obs_phi = np.pi/2
 
          # Number of data points
          self.length = len(ra)
-
-         # Setting threshold
+         # Setting threshold - currently arbitrary
          self.threshold = max(self.get_r())*0.8
 
-         self.close_x = self.x[self.get_r() < self.threshold]
-         self.close_y = self.y[self.get_r() < self.threshold]
-         self.close_z = self.z[self.get_r() < self.threshold]
+         self._set_perspective_data()
 
-         self.num_threshold = len(self.close_x)
 
-          # Plotting size of points
-         self.size =  20 - (self.get_close_r()*(20/self.threshold))
+    def _set_perspective_data(self):
+        self.close_x = self.x[self.get_r() < self.threshold]
+        self.close_y = self.y[self.get_r() < self.threshold]
+        self.close_z = self.z[self.get_r() < self.threshold]
 
-         # Alpha value of points
-         self.alpha = np.zeros((self.num_threshold,4))
-         self.alpha[:,0] = 1.0
-         self.alpha[:,3] = 1-(self.get_close_r()*(1.0/self.threshold))
+        self.num_threshold = len(self.close_x)
 
+        # Plotting size of points
+        self.size =  20*(1 - self.get_close_r()/self.threshold)
+
+        # Alpha value of points
+        self.alpha = np.zeros((self.num_threshold,4))
+        self.alpha[:,0] = 1.0
+        self.alpha[:,3] = 1-(self.get_close_r()*(1.0/self.threshold))
 
     def translate(self, obs_x, obs_y, obs_z, obs_theta, obs_phi):
+        """
+        Translates the points as if the observer located at obs_x,obs_y,obs_z,
+        looking at obs_theta, obs_phi is at the origin looking down the x axis.
+        """
         self.obs_x = obs_x
         self.obx_y = obs_y
         self.obs_z = obs_z
+
+        self.obs_theta = obs_theta
+        self.obs_phi = obs_phi
 
         self.x = self.x - obs_x
         self.y = self.y - obs_y
@@ -84,20 +96,7 @@ class PlotData(object):
         self.set_phi(phi - obs_phi)
 
 
-        # Setting threshold
-        self.close_x = self.x[self.get_r() < self.threshold]
-        self.close_y = self.y[self.get_r() < self.threshold]
-        self.close_z = self.z[self.get_r() < self.threshold]
-
-        self.num_threshold = len(self.close_x)
-
-         # Plotting size of points
-        self.size =  20 - (self.get_close_r()*(20/self.threshold))
-
-        # Alpha value of points
-        self.alpha = np.zeros((self.num_threshold,4))
-        self.alpha[:,2] = 1.0
-        self.alpha[:,3] = 1-(self.get_close_r()*(1.0/self.threshold))
+        self._set_perspective_data()
 
     def get_theta(self):
         """
@@ -112,6 +111,7 @@ class PlotData(object):
         Returns phi [rad] of each point expressed in spherical coords.
         (Note, phi is the polar angle from the z axis, 0 < phi < pi)
         """
+
         return np.where((self.z-self.obs_z) == 0, 0, np.arccos((self.z-self.obs_z)/self.get_r()))
 
 
@@ -120,13 +120,15 @@ class PlotData(object):
         Returns r [m] of each point expressed in spherical coods.
         (Note, r is the distance from the origin)
         """
+
         return  np.sqrt(np.power(self.x-self.obs_x,2) + np.power(self.y-self.obs_y,2) + np.power(self.z-self.obs_z,2))
 
 
     def set_theta(self, theta):
         """
-        Rotates the coordinates by theta [rad]. 0 < theta < 2pi
+        Rotates the points' coordinates by theta [rad]. 0 < theta < 2pi
         """
+
         theta = np.mod(theta, 2*np.pi)
         r = self.get_r()
         phi = self.get_phi()
@@ -137,8 +139,9 @@ class PlotData(object):
 
     def set_phi(self, phi):
         """
-        Rotates the coordinates by phi [rad]. 0 < phi < pi
+        Rotates the points' coordinates by phi [rad]. 0 < phi < pi
         """
+
         phi = np.mod(phi, np.pi)
         r = self.get_r()
         theta = self.get_theta()
@@ -176,16 +179,14 @@ des = PlotData(data[0:numpoints,0],data[0:numpoints,1],data[0:numpoints,2])
 #ax.scatter(des.x,des.y,des.z, c="r", marker = "*")
 #ax.scatter(0,0,0,c="r", marker = "o")
 
-ax.scatter(des.close_x,des.close_y,des.close_z, c=des.alpha, marker = "*")
-ax.scatter(0,0,0,c="y", marker = "o")
-ax.scatter(des.x,des.y,des.z, c="r", marker = "*")
-ax.scatter(0,0,0,c="y", marker = "o")
+ax.scatter(des.close_x,des.close_y,des.close_z, c=des.alpha, marker = "*", s = des.size)
+ax.scatter(des.obs_x,des.obs_y,des.obs_z,c="y", marker = "o")
 
 
 des.translate(0.1,-0.5,0.2,0,0)
 
 ax.scatter(des.x,des.y,des.z, c="b", marker = "*")
-ax.scatter(-0.2,-1.75,0.5,c="g",marker = "o" )
+ax.scatter(des.obs_x,des.obs_y,des.obs_z,c="g",marker = "o" )
 
 
 
