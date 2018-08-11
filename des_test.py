@@ -1,10 +1,3 @@
-"""
-Created on Thu Jul 12 10:42:33 2018
-
-@author: katiegray
-"""
-
-
 import numpy as np
 import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
