@@ -29,7 +29,7 @@ class PlotData(object):
         self._z = z
 
         # Observer
-        self.observer = Observer(0, 0, 0, 0, np.pi/2)
+        self.observer = Observer(0, 0, 0, np.pi,0)
 
         # Cartersion coord system
         dec = np.pi / 2 - dec
@@ -40,12 +40,11 @@ class PlotData(object):
         # Number of data points
         self.length = len(ra)
 
-        # Setting threshold - currently arbitrary
-        self.threshold = max(self.get_r())*0.8
-
         self._set_perspective_data("red")
 
     def _set_perspective_data(self, colour):
+         # Setting threshold - currently arbitrary
+        self.threshold = max(self.get_r())
         self.close_x = self.x[self.get_r() < self.threshold]
         self.close_y = self.y[self.get_r() < self.threshold]
         self.close_z = self.z[self.get_r() < self.threshold]
@@ -60,7 +59,7 @@ class PlotData(object):
         if colour == "red":
             self.alpha[:, 0] = 1.0
         else:
-            self.alpha[:, 1] = 1.0
+            self.alpha[:, 2] = 1.0
         self.alpha[:, 3] = 1-(self.get_close_r()*(1.0/self.threshold))
 
     def get_theta(self):
@@ -107,5 +106,5 @@ class Observer(object):
         self.x = x
         self.y = y
         self.z = z
-        self.theta = theta
+        self.theta = theta%(2*np.pi)
         self.phi = phi

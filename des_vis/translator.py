@@ -14,9 +14,10 @@ class Translator(object):
 
     def translate(self, obs_x, obs_y, obs_z, obs_theta, obs_phi):
         """
-        Translates the points as if the observer located at obs_x, obs_y,
-        obs_z, looking at obs_theta, obs_phi is at the origin looking down
-        the x axis.
+        Translates the points as if the observer moves forward obs_x, obs_y,
+        obs_z, units in the x, y, z directions respectively and rotates their
+        angle of view obs_theta radians clockwise and obs_phi radians upwards.
+
         """
         self.plot_data.x = self.plot_data.x - obs_x
         self.plot_data.y = self.plot_data.y - obs_y
@@ -32,9 +33,9 @@ class Translator(object):
 
         self.plot_data._set_perspective_data("blue")
 
-        self.plot_data.observer.x = obs_x
-        self.plot_data.observer.y = obs_y
-        self.plot_data.observer.z = obs_z
+        self.plot_data.observer.x += obs_x
+        self.plot_data.observer.y += obs_y
+        self.plot_data.observer.z += obs_z
 
-        self.plot_data.observer.theta = obs_theta
-        self.plot_data.observer.phi = obs_phi
+        self.plot_data.observer.theta += obs_theta
+        self.plot_data.observer.phi += obs_phi
