@@ -17,4 +17,4 @@
 *.bbl
 des_thinned.npy
 *.pyc
-outputs/*
+des_vis/outputs/*
