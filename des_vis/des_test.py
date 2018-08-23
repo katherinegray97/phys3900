@@ -1,14 +1,10 @@
-
 import numpy as np
-
 import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
 import time
 import os, re, os.path
 from plot_data import PlotData
 from translator import Translator
-
-
 
 if __name__ == "__main__":
 
@@ -20,7 +16,7 @@ if __name__ == "__main__":
     data = data[~np.isnan(data).any(axis=1)]
 
     # Truncate, for testing
-    numpoints = 1000 # len(data)
+    numpoints = len(data)//100
     des = PlotData(data[0:numpoints, 0], data[0:numpoints, 1],
                    data[0:numpoints, 2])
 
@@ -33,9 +29,9 @@ if __name__ == "__main__":
 
     #rotate so that points are in front of camera
     translator.translate(0, 0, 0,1.3*np.pi,-np.pi/6)
-
-    ######ROTATE
-    for i in range(0, 2):
+    now = 0
+    ### Observer moves out - set to 100 for a nice video
+    for i in range(0, 100):
 
         fig = plt.figure(figsize=(19.2, 10.8), frameon=False)
 
@@ -51,11 +47,11 @@ if __name__ == "__main__":
         #set camera to be looking down x axis (y increasing on left)
         ax.view_init(elev=0,
                      azim=180)
-        #ax.dist=7
+        ax.dist=1
 
         ax.set_xlim(0, 3)
-        ax.set_ylim(-0.1,0.1)
-        ax.set_zlim(0, 0.15)
+        ax.set_ylim(-1,1)
+        ax.set_zlim(0, 0.2)
 
         ax.set_xlabel('x')
         ax.set_ylabel('y')
@@ -63,20 +59,17 @@ if __name__ == "__main__":
 
         ax.scatter(translator.plot_data.close_x, translator.plot_data.close_y,
                    translator.plot_data.close_z, marker="*",
-                   c=translator.plot_data.alpha, s=100*translator.plot_data.close_size)
-        name_out = "outputs/des" + "{0:0=3d}".format(i)
+                   c=translator.plot_data.close_alpha, s=100*translator.plot_data.close_size)
+        name_out = "outputs/axistest" + "{0:0=3d}".format(i)
 
         #save to file
-        fig.savefig(name_out,  pad_inches=0, dpi=100)
+        fig.savefig(name_out, pad_inches=0, dpi=100)
 
         #translate
-        translator.translate(0.0005, 0, 0, 0,0)
+        translator.translate(0.01, 0, 0, 0, 0)
         plt.close("all")
-
-    print(str(numpoints) + " points executed in: " + str(round(time.time()-start,2)) + "secs")
-
+        print(i)
 
 
 
-
-
+    print(str(numpoints) + " points in " + str(i+1) + " plots executed in: " + str(round(time.time() - start, 2)) + "secs")

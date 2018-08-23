@@ -31,7 +31,7 @@ class Translator(object):
         self.plot_data.y = r*np.sin(theta)*np.sin(phi)
         self.plot_data.z = r*np.cos(phi)
 
-        self.plot_data._set_perspective_data("blue")
+        self.plot_data._set_perspective_data()
 
         self.plot_data.observer.x += obs_x
         self.plot_data.observer.y += obs_y
