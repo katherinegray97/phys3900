@@ -44,7 +44,7 @@ class PlotData(object):
 
     def _set_perspective_data(self, colour):
          # Setting threshold - currently arbitrary
-        self.threshold = max(self.get_r())
+        self.threshold = 0.7
         self.close_x = self.x[self.get_r() < self.threshold]
         self.close_y = self.y[self.get_r() < self.threshold]
         self.close_z = self.z[self.get_r() < self.threshold]
@@ -52,7 +52,7 @@ class PlotData(object):
         self.num_threshold = len(self.close_x)
 
         # Plotting size of points
-        self.size = 20*(1 - self.get_close_r()/self.threshold)
+        self.close_size = 20*(1 - self.get_close_r()/self.threshold)
 
         # Alpha value of points, also defines colour of points
         self.alpha = np.zeros((self.num_threshold, 4))
