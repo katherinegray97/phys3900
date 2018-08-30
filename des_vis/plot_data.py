@@ -40,7 +40,7 @@ class PlotData(object):
         # Number of data points
         self.length = len(ra)
 
-        self.threshold = 0.9
+        self.threshold = 0.4 #set to 0.05 when using the entire trimmed dataset
 
         self.alpha = np.zeros((self.length, 4))
         self.alpha[:,0] = np.random.rand(self.length)
@@ -58,9 +58,9 @@ class PlotData(object):
         self.num_threshold = len(self.close_x)
 
         # Plotting size of points
-        self.close_size = 20*(1 - self.get_close_r()/self.threshold)
+        self.close_size = 20*(1 - self.close_x/self.threshold)
 
-        self.close_alpha[:, 3] = 1-(self.get_close_r()*(1.0/self.threshold))
+        self.close_alpha[:, 3] = np.amax(1-abs(self.close_x/np.amax(self.close_x)),0)
 
     def get_theta(self):
         """
