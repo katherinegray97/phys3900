@@ -18,7 +18,7 @@ if __name__ == "__main__":
 
     # Truncate, for testing
     np.random.shuffle(data)
-    numpoints = len(data)//100
+    numpoints = len(data)//1
     des = PlotData(data[0:numpoints, 0], data[0:numpoints, 1],
                    data[0:numpoints, 2])
 
@@ -45,7 +45,7 @@ if __name__ == "__main__":
     count =0;
 
     ### Observer moves out - set to 100 for a nice video
-    for i in range(0, 100):
+    for i in range(0, 1):
 
         proj_x = np.arctan2(translator.plot_data.close_y, translator.plot_data.close_x) / np.tan(fov_w)
         proj_y = np.arctan2(translator.plot_data.close_z,  translator.plot_data.close_x) / np.tan(fov_h)
@@ -74,6 +74,6 @@ if __name__ == "__main__":
 
 
     print(str(numpoints) + " points in " + str(i+1) + " plots executed in: " + str(round(time.time() - start, 2)) + "secs")
-    print("ffmpegging")
-    os.system("./ffmpeg.sh " + name_out + " "+ name_out )
-    print("Done!")
+#    print("ffmpegging")
+#    os.system("./ffmpeg.sh " + name_out + " "+ name_out )
+#    print("Done!")
