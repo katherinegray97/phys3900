@@ -3,77 +3,67 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 import time
-import os, re, os.path
-from plot_data import PlotData
-from translator import Translator
-import subprocess
+import os, os.path
+from survey import Survey
+from camera import Camera
+
 if __name__ == "__main__":
 
-    start= time.time()
+    start = time.time()
+
+    # Delete old results files
+    mypath = "outputs"
+    for root, dirs, files in os.walk(mypath):
+        for file in files:
+            os.remove(os.path.join(root, file))
+
     # Import data
     data = np.load("des_thinned.npy")
 
     # Clean data, remove nans
     data = data[~np.isnan(data).any(axis=1)]
 
-    # Truncate, for testing
+    # Shuffle and truncate, for testing
     np.random.shuffle(data)
-    numpoints = len(data)//1
-    des = PlotData(data[0:numpoints, 0], data[0:numpoints, 1],
-                   data[0:numpoints, 2])
-
-    # Delete files
-    mypath = "outputs"
-    for root, dirs, files in os.walk(mypath):
-        for file in files:
-            os.remove(os.path.join(root, file))
-
-    # Viewport width and height
-    v_x, v_y = 1920, 1080
-    aspect = v_x / v_y  # Python 3 required
-    fov = 70  # Camera FOV
-    fov_w = 0.5 * 70 * np.pi / 180
-    fov_h = fov_w / aspect
-
-    translator = Translator(des)
+    n = len(data)//100
+    data = data[0:n, :]
 
 
-    #rotate so that points are in front of camera
+    # Instantiate classes
+    des = Survey(data[:, 0], data[:, 1], data[:, 2])
+    cam = Camera(des)
+
+    # Create 2D Matplotlib figure and axes
     fig, ax = plt.subplots(1, 1, figsize=(19.2, 10.8))
-    # removes subplot padding
+
+    # Remove subplot padding
     fig.subplots_adjust(left=0, bottom=0, right=1, top=1)
-    count =0;
+
 
     ### Observer moves out - set to 100 for a nice video
     for i in range(0, 1):
-
-        proj_x = np.arctan2(translator.plot_data.close_y, translator.plot_data.close_x) / np.tan(fov_w)
-        proj_y = np.arctan2(translator.plot_data.close_z,  translator.plot_data.close_x) / np.tan(fov_h)
-
         ax.set_xlim(-1, 1)
         ax.set_ylim(-1, 1)
-        ax.scatter(proj_x, proj_y, c=translator.plot_data.close_alpha, s=100*translator.plot_data.close_size)
+        ax.scatter(cam.get_points_x(), cam.get_points_y()) #c=des.alpha, s=100*des.size
 
         #save to file
         name_out = "refactored"
-        name = "outputs/"+name_out+ "{0:0=3d}".format(i)
+        fig.savefig("outputs/" + name_out + "{0:0=3d}".format(i), dpi = 100)
 
-        fig.savefig(name, dpi = 100)
-
-
-        if (count < 15):
-            translator.translate(0, 0, 0, 0.01, 0.01)
-        elif(count <20):
-            translator.translate(0.001, 0, 0, 0.01, 0.01)
+        if (i < 15):
+            cam.translate(0, 0, 0, 0.01, 0.01)
+        elif(i < 20):
+            cam.translate(0.001, 0, 0, 0.01, 0.01)
         else:
-            translator.translate(0.001, 0, 0, 0, 0)
+            cam.translate(0.001, 0, 0, 0, 0)
 
         plt.cla()
-        count+=1
+
         print(i)
 
 
-    print(str(numpoints) + " points in " + str(i+1) + " plots executed in: " + str(round(time.time() - start, 2)) + "secs")
+
+    print(str(n) + " points in " + str(i+1) + " plots executed in: " + str(round(time.time() - start, 2)) + "secs")
 #    print("ffmpegging")
 #    os.system("./ffmpeg.sh " + name_out + " "+ name_out )
 #    print("Done!")
