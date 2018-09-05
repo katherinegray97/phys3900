@@ -38,12 +38,13 @@ if __name__ == "__main__":
 
     # Remove subplot padding
     fig.subplots_adjust(left=0, bottom=0, right=1, top=1)
+    ax.set_xlim(-1, 1)
+    ax.set_ylim(-1, 1)
 
     ### Observer moves out - set to 100 for a nice video
-    for i in range(0, 1):
-        ax.set_xlim(-1, 1)
-        ax.set_ylim(-1, 1)
-        ax.scatter(cam.proj_x(), cam.proj_y()) #c=des.alpha, s=100*des.size
+    for i in range(0, 20):
+        ax.scatter(cam.proj_x(), cam.proj_y(), c=des.colours, s=100*des.size)
+        plt.draw()
 
         #save to file
         name_out = "refactored"
@@ -55,14 +56,14 @@ if __name__ == "__main__":
             cam.translate(0.001, 0, 0, 0.01, 0.01)
         else:
             cam.translate(0.001, 0, 0, 0, 0)
-
+        plt.clf()
         plt.cla()
-
         print(i)
 
 
 
+
     print(str(n) + " points in " + str(i+1) + " plots executed in: " + str(round(time.time() - start, 2)) + "secs")
-#    print("ffmpegging")
-#    os.system("./ffmpeg.sh " + name_out + " "+ name_out )
-#    print("Done!")
+    print("ffmpegging")
+    os.system("./ffmpeg.sh " + name_out + " "+ name_out )
+    print("Done!")

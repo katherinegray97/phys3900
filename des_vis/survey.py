@@ -22,37 +22,40 @@ class Survey(object):
         zs:   np.ndarray
             redshift of each point
         """
-
+        self._threshold = threshold
         # Cartersion coord system
         decs = np.pi / 2 - decs
         self._full_xs = np.sin(ras) * np.sin(decs) * zs
         self._full_ys = np.cos(ras) * np.sin(decs) * zs
         self._full_zs = np.cos(decs) * zs
 
-        self.set_threshold(threshold)
+        self._full_length = len(self._full_xs)
 
-    def set_threshold(self, threshold):
+        # Random colours
+        self._full_colours = np.zeros((self._full_length, 4))
+        self._full_colours[:,0] = abs(self._get_r()/max(self._get_r()))
+        self._full_colours[:,2] = abs(self._get_r()/max(self._get_r()))
+
+        self._reset_perspective()
+
+    def _reset_perspective(self):
         """
         Returns theta [rads] of each point expressed in spherical coords.
         (Note, theta is the azimuthal angle in the x-y plane, 0 < theta < 2pi)
         """
-        self._threshold = threshold
-        self.xs = self._full_xs[self._get_r() < threshold]
-        self.ys = self._full_ys[self._get_r() < threshold]
-        self.zs = self._full_zs[self._get_r() < threshold]
+        self.xs = self._full_xs[self._get_r() < self._threshold]
+        self.ys = self._full_ys[self._get_r() < self._threshold]
+        self.zs = self._full_zs[self._get_r() < self._threshold]
+        self.colours = self._full_colours[self._get_r() < self._threshold]
 
         # Number of points below the threshold
         self.length = len(self.xs)
 
         # Plotting sizes of points
-        self.size = 20*(1 - self.xs/threshold)
+        self.size = 20*(1 - self._get_r()/self._threshold)
 
-        # Random colours
-        self.alpha = np.zeros((self.length, 4))
-        self.alpha[:,0] = np.random.rand(self.length)
-        self.alpha[:,1] = np.random.rand(self.length)
-        self.alpha[:,2] = np.random.rand(self.length)
-        self.alpha[:, 3] = 1-abs(self.xs/np.amax(self.xs))
+        # Alpha
+        self.colours[:, 3] = 1-abs(self._get_r()/self._threshold)
 
 
     def _get_theta(self):
@@ -106,7 +109,7 @@ class Survey(object):
         self._full_zs = r*np.cos(phi)
 
         # Update thresholds
-        self.set_threshold(self._threshold)
+        self._reset_perspective()
 
     def print(self):
         print(np.dstack([self.xs[0:3], self.ys[0:3], self.zs[0:3]]))

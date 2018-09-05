@@ -11,13 +11,7 @@ import numpy as np
 
 class Camera(object):
     def __init__(self, survey, v_x = 1920, v_y = 1080, fov = 70):
-        self.x = 0
-        self.y = 0
-        self.z = 0
-        self.theta = np.pi
-        self.phi = 0
         self.survey = survey
-
         self.v_x = v_x
         self.v_y = v_y
         self.aspect = v_x/v_y
@@ -25,6 +19,11 @@ class Camera(object):
         self.fov_w = 0.5 * fov * np.pi / 180
         self.fov_h = self.fov_w / self.aspect
 
+        self.x = 0
+        self.y = 0
+        self.z = 0
+        self.theta = np.pi
+        self.phi = 0
 
     def proj_x(self):
         return np.arctan2(self.survey.ys, self.survey.xs) / np.tan(self.fov_w)
