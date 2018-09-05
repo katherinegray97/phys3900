@@ -25,12 +25,12 @@ if __name__ == "__main__":
 
     # Shuffle and truncate, for testing
     np.random.shuffle(data)
-    n = len(data)//10000
+    n = len(data)//1000
     data = data[0:n, :]
 
 
     # Instantiate classes
-    des = Survey(data[:, 0], data[:, 1], data[:, 2])
+    des = Survey(data[:, 0], data[:, 1], data[:, 2], threshold =0.5)
     cam = Camera(des)
 
     # Create 2D Matplotlib figure and axes
@@ -38,11 +38,16 @@ if __name__ == "__main__":
 
     # Remove subplot padding
     fig.subplots_adjust(left=0, bottom=0, right=1, top=1)
-    ax.set_xlim(-1, 1)
-    ax.set_ylim(-1, 1)
+
+
+    fig.canvas.draw()
 
     ### Observer moves out - set to 100 for a nice video
-    for i in range(0, 20):
+    for i in range(0, 5):
+        ax.clear()
+        ax.set_xlim(-1, 1)
+        ax.set_ylim(-1, 1)
+
         ax.scatter(cam.proj_x(), cam.proj_y(), c=des.colours, s=100*des.size)
         plt.draw()
 
@@ -56,8 +61,8 @@ if __name__ == "__main__":
             cam.translate(0.001, 0, 0, 0.01, 0.01)
         else:
             cam.translate(0.001, 0, 0, 0, 0)
-        plt.clf()
-        plt.cla()
+
+#        plt.cla()
         print(i)
 
 
