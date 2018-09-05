@@ -18,7 +18,7 @@ if __name__ == "__main__":
 
     # Truncate, for testing
     np.random.shuffle(data)
-    numpoints = len(data)//1
+    numpoints = len(data)//10000
     des = PlotData(data[0:numpoints, 0], data[0:numpoints, 1],
                    data[0:numpoints, 2])
 

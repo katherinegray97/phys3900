@@ -40,7 +40,7 @@ class PlotData(object):
         # Number of data points
         self.length = len(ra)
 
-        self.threshold = 0.05 #set to 0.05 when using the entire trimmed dataset
+        self.threshold = 190000 #set to 0.05 when using the entire trimmed dataset
 
         self.alpha = np.zeros((self.length, 4))
         self.alpha[:,0] = np.random.rand(self.length)
