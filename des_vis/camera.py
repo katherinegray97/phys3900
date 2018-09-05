@@ -30,7 +30,7 @@ class Camera(object):
         return np.arctan2(self.survey.ys, self.survey.xs) / np.tan(self.fov_w)
 
     def proj_y(self):
-        return np.arctan2(self.survey.zs, self.survey.ys) / np.tan(self.fov_h)
+        return np.arctan2(self.survey.zs, self.survey.xs) / np.tan(self.fov_h)
 
     def _get_theta(self):
         """
