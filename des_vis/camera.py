@@ -45,8 +45,11 @@ class Camera(object):
         Returns phi [rads] of each point expressed in spherical coords.
         (Note, phi is the polar angle from the z axis, 0 < phi < pi)
         """
+        if(self._get_r()!= 0):
+            if(self.z/self._get_r() > 1):
+                print("problem")
 
-        return np.where((self.z) == 0, 0, np.arccos((self.z)/self._get_r()))
+        return np.where((self._get_r()) == 0, 0, np.arccos(self.z/self._get_r()))
 
     def _get_r(self):
         """
@@ -66,15 +69,19 @@ class Camera(object):
         """
         self.survey.translate(-x, -y, -z, -theta, -phi)
 
+        self.x += x
+        self.y += y
+        self.z += z
+
         # Get new radii
-        r = self._get_r()
-
-        # Rotate
-        theta = self._get_theta() + theta
-        phi = self._get_phi() + phi
-
-        # Set rotation
-        self.x = r*np.cos(theta)*np.sin(phi)
-        self.y = r*np.sin(theta)*np.sin(phi)
-        self.z = r*np.cos(phi)
+#        r = self._get_r()
+#
+#        # Rotate
+#        theta = self._get_theta() + theta
+#        phi = self._get_phi() + phi
+#
+#        # Set rotation
+#        self.x = r*np.cos(theta)*np.sin(phi)
+#        self.y = r*np.sin(theta)*np.sin(phi)
+#        self.z = r*np.cos(phi)
 

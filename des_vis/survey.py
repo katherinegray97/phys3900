@@ -69,7 +69,7 @@ class Survey(object):
         (Note, phi is the polar angle from the z axis, 0 < phi < pi)
         """
 
-        return np.where((self._full_zs) == 0, 0, np.arccos((self._full_zs)/self._get_r()))
+        return np.where((self._full_zs) == 0, 0, np.arccos(self._full_zs/self._get_r()))
 
     def _get_r(self):
         """

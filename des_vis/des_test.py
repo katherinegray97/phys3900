@@ -25,7 +25,7 @@ if __name__ == "__main__":
 
     # Shuffle and truncate, for testing
     np.random.shuffle(data)
-    n = len(data)//100
+    n = len(data)//10000
     data = data[0:n, :]
 
 
@@ -38,7 +38,6 @@ if __name__ == "__main__":
 
     # Remove subplot padding
     fig.subplots_adjust(left=0, bottom=0, right=1, top=1)
-
 
     ### Observer moves out - set to 100 for a nice video
     for i in range(0, 1):
