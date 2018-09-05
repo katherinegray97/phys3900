@@ -43,7 +43,7 @@ if __name__ == "__main__":
     for i in range(0, 1):
         ax.set_xlim(-1, 1)
         ax.set_ylim(-1, 1)
-        ax.scatter(cam.get_points_x(), cam.get_points_y()) #c=des.alpha, s=100*des.size
+        ax.scatter(cam.proj_x(), cam.proj_y()) #c=des.alpha, s=100*des.size
 
         #save to file
         name_out = "refactored"

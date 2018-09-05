@@ -26,10 +26,10 @@ class Camera(object):
         self.fov_h = self.fov_w / self.aspect
 
 
-    def get_points_x(self):
+    def proj_x(self):
         return np.arctan2(self.survey.ys, self.survey.xs) / np.tan(self.fov_w)
 
-    def get_points_y(self):
+    def proj_y(self):
         return np.arctan2(self.survey.zs, self.survey.ys) / np.tan(self.fov_h)
 
     def _get_theta(self):
