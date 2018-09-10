@@ -18,3 +18,6 @@
 des_thinned.npy
 *.pyc
 des_vis/outputs/*
+des_vis/data/
+
+*.gif

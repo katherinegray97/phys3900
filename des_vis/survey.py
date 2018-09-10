@@ -57,7 +57,7 @@ class Survey(object):
         self.length = len(self.xs)
 
         # Plotting sizes of points
-        self.size = 20*(1 - self._get_r()[self._get_r() < self._threshold]/self._threshold)
+        self.size = 5*(1 - self._get_r()[self._get_r() < self._threshold]/self._threshold)
 
     def _get_theta(self):
         """

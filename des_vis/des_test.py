@@ -18,7 +18,7 @@ if __name__ == "__main__":
             os.remove(os.path.join(root, file))
 
     # Import data
-    data = np.load("des_thinned.npy")
+    data = np.load("data/des_thinned.npy")
 
     # Clean data, remove nans
     data = data[~np.isnan(data).any(axis=1)]
@@ -43,7 +43,7 @@ if __name__ == "__main__":
     fig.canvas.draw()
 
     ### Observer moves out - set to 100 for a nice video
-    for i in range(0, 5):
+    for i in range(0, 100):
         ax.clear()
         ax.set_xlim(-1, 1)
         ax.set_ylim(-1, 1)
