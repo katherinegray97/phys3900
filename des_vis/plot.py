@@ -33,14 +33,18 @@ def main():
         for file in files:
             os.remove(os.path.join(root, file))
 
+    dataset = "full"
     # Load data
-    fp= open("data/DESdata", mode = "rb")
+    if(dataset == "full"):
+        fp = open("data/full_data", mode = "rb")
+    else:
+        fp = open("data/thin_data", mode = "rb")
+
     data = pickle.load(fp)
     fp.close()
-    print("Loaded " + str(time.time() - start))
 
     # Truncate data
-    n = len(data)//10
+    n = len(data)
     print(n)
     data = data[0:n, :]
     print("Truncated " + str(time.time()- start))
@@ -48,9 +52,16 @@ def main():
     # Instantiate classes
     # Find max r in survey, for setting threshold
     # print("MAX: " + str(np.amax(des._get_r())))
-    des = Survey(data[:, 0], data[:, 1], data[:, 2], threshold = 0.9)
-    cam = Camera(des)
 
+    if(dataset == "full"):
+        des = Survey(data[:, 0], data[:, 1], data[:, 6], threshold = 0.9)
+    else:
+        des = Survey(data[:, 0], data[:, 1], data[:, 2], threshold = 0.9)
+
+
+
+    cam = Camera(des)
+    cam.translate(-1,-0.1,0,0,0)
     vispy_plot(des, cam)
     #matplotlib_plot(des,cam)
 
@@ -73,11 +84,28 @@ def vispy_plot(des, cam):
     view.camera.distance = 0
 
     writer = imageio.get_writer('outputs/vispy_animation.gif')
-    for i in range(20):
-        cam.translate(0.001,0.0001,0,0,0)
+    max_i = 100
+    for i in range(max_i):
+
+        print(str(cam.x) + " " + str(cam.y)+ " " + str(cam.z))
+#        if (i < 15):
+#            cam.translate(0,0,0,0.001,0.001)
+#        elif(i<20):
+#            cam.translate(0.001,0.0001,0,0,0)
+#        else:
+#            cam.translate(0.001,0.0001,0,0,0)
+        dx = 0.02
+        dy = 0.002
+#        if (i< max_i/2):
+#            dy = 0.002
+#        else:
+#            dy = -0.002
+
+
+        cam.translate(dx,dy,0,0,0)
         points[:,0] = cam.proj_x()
         points[:,1] = cam.proj_y()
-        scatter.set_data(points, edge_color=None, face_color=ColorArray(des.colours), size=3*des.size)
+        scatter.set_data(points, edge_color=None, face_color=ColorArray(des.colours), size=5*des.size)
         #scatter.set_data(points, edge_width=None, edge_width_rel=0.5, edge_color='red', face_color="white", size=20*des.size)
         im = canvas.render()
         writer.append_data(im)
@@ -130,6 +158,7 @@ def matplotlib_plot(des, cam):
 
 if __name__ == "__main__":
     start = time.time()
+    print(start)
     main()
 
 

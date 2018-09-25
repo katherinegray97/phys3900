@@ -65,7 +65,7 @@ class Survey(object):
         self.length = len(self.xs)
 
         # Plotting sizes of points
-        self.size = 5*(1 - self._get_r()/self._threshold)
+        self.size = 1/(15*pow(self._get_r(),2)+1)
         #self.size = 5*(1 - self._get_r()[self._get_r() < self._threshold]/self._threshold)
 
     def _get_theta(self):
@@ -74,15 +74,14 @@ class Survey(object):
         (Note, theta is the azimuthal angle in the x-y plane, 0 < theta < 2pi)
         """
 
-        return np.where((self._full_ys) == 0, 0, np.arctan2(self._full_ys, self._full_xs))
+        return np.where(self._full_ys == 0, 0, np.arctan2(self._full_ys, self._full_xs))
 
     def _get_phi(self):
         """
         Returns phi [rads] of each point expressed in spherical coords.
         (Note, phi is the polar angle from the z axis, 0 < phi < pi)
         """
-
-        return np.where((self._full_zs) == 0, 0, np.arccos(self._full_zs/self._get_r()))
+        return np.where(self._full_zs == 0, 0, np.arccos(self._full_zs/self._get_r()))
 
     def _get_r(self):
         """

@@ -19,18 +19,24 @@ import matplotlib.pyplot as plt
 
 
 def main():
-    # Delete old results files
-    mypath = "outputs"
-    for root, dirs, files in os.walk(mypath):
-        for file in files:
-            os.remove(os.path.join(root, file))
-
     # Load data
     fp= open("data/DESdata", mode = "rb")
     data = pickle.load(fp)
     fp.close()
 
-    print("Loaded " + str(time.time() - start))
+    green_red_diff = data[:,2] - data[:,3]
+    print(min(green_red_diff))
+    print(max(green_red_diff))
+    # the histogram of the data
+    n, bins, patches = plt.hist(green_red_diff, 50, density=True, facecolor='g', alpha=0.75)
+    fig, ax = plt.subplots(1,1)
+    plt.xlabel('Green-Red')
+    plt.ylabel('Probability')
+    plt.title('Histogram of Green-Red')
+    plt.grid(True)
+    fig.savefig("outputs/hist")
+    plt.show()
+
 
 
 if __name__ == "__main__":
