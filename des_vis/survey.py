@@ -31,13 +31,20 @@ class Survey(object):
 
         self._full_length = len(self._full_xs)
 
+
+        # Reorder based on radius
+        idx = np.argsort(self._get_r())
+        self._full_xs = self._full_xs[idx]
+        self._full_ys = self._full_ys[idx]
+        self._full_zs = self._full_zs[idx]
+
         # Random colours
         self._full_colours = np.zeros((self._full_length, 4))
         self._full_colours[:,0] = np.random.rand(self._full_length)
         self._full_colours[:,1] = np.random.rand(self._full_length)
         self._full_colours[:,2] = np.random.rand(self._full_length)
-#        self._full_colours[:,0] = abs(self._get_r()/max(self._get_r()))
-#        self._full_colours[:,2] = abs(self._get_r()/max(self._get_r()))
+
+
 
 
         self._reset_perspective()
@@ -47,17 +54,19 @@ class Survey(object):
         Returns theta [rads] of each point expressed in spherical coords.
         (Note, theta is the azimuthal angle in the x-y plane, 0 < theta < 2pi)
         """
-        self.xs = self._full_xs[self._get_r() < self._threshold]
-        self.ys = self._full_ys[self._get_r() < self._threshold]
-        self.zs = self._full_zs[self._get_r() < self._threshold]
-        self._full_colours[:, 3] = 1-abs(self._get_r()/self._threshold)
-        self.colours = self._full_colours[self._get_r() < self._threshold]
+        self.xs = self._full_xs#[self._get_r() < self._threshold]
+        self.ys = self._full_ys#[self._get_r() < self._threshold]
+        self.zs = self._full_zs#[self._get_r() < self._threshold]
+
+        self._full_colours[:, 3] =1# 1/(50*pow(self._get_r(),2)+1)
+        self.colours = self._full_colours#[self._get_r() < self._threshold]
 
         # Number of points below the threshold
         self.length = len(self.xs)
 
         # Plotting sizes of points
-        self.size = 5*(1 - self._get_r()[self._get_r() < self._threshold]/self._threshold)
+        self.size = 5*(1 - self._get_r()/self._threshold)
+        #self.size = 5*(1 - self._get_r()[self._get_r() < self._threshold]/self._threshold)
 
     def _get_theta(self):
         """
