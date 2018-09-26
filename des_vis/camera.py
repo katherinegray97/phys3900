@@ -68,6 +68,7 @@ class Camera(object):
         """
         self.survey.translate(-x, -y, -z, -theta, -phi)
 
+        # Reset camera position, note not full implemented
         self.x += x
         self.y += y
         self.z += z

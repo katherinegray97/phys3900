@@ -34,8 +34,40 @@ def main():
     plt.ylabel('Probability')
     plt.title('Histogram of Green-Red')
     plt.grid(True)
-    fig.savefig("outputs/hist")
-    plt.show()
+    #fig.savefig("outputs/hist")
+
+
+    fig1, ax1 = plt.subplots()
+    ax1.set_title('Basic Plot')
+    ax1.boxplot(green_red_diff)
+
+    print(np.percentile(green_red_diff, [25, 50, 75]))
+    print(green_red_diff.min(), green_red_diff.max())
+
+    print(data.shape)
+    data = data[data[:,8] != 0]
+    print(data.shape)
+    green_red_diff = data[:,2] - data[:,3]
+    print(min(green_red_diff))
+    print(max(green_red_diff))
+    # the histogram of the data
+    n, bins, patches = plt.hist(green_red_diff, 50, density=True, facecolor='g', alpha=0.75)
+    fig, ax = plt.subplots(1,1)
+    plt.xlabel('Green-Red')
+    plt.ylabel('Probability')
+    plt.title('Histogram of Green-Red')
+    plt.grid(True)
+    #fig.savefig("outputs/hist")
+
+
+    fig1, ax1 = plt.subplots()
+    ax1.set_title('Basic Plot')
+    ax1.boxplot(green_red_diff)
+
+    print(np.mean(green_red_diff))
+    print(np.std(green_red_diff))
+    print(green_red_diff.min(), green_red_diff.max())
+
 
 
 

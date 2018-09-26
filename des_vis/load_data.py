@@ -16,10 +16,9 @@ thin_data = np.load("data/des_thinned.npy")
 
 # Clean data, remove nans
 full_data = full_data[~np.isnan(full_data).any(axis=1)]
-np.random.shuffle(full_data)
 thin_data = thin_data[~np.isnan(thin_data).any(axis=1)]
-np.random.shuffle(thin_data)
 
+full_data = full_data[full_data[:,8] != 0]
 
 full = open("data/full_data", mode="wb")
 thin = open("data/thin_data", mode="wb")

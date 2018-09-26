@@ -24,6 +24,7 @@ import imageio
 import pickle
 from vispy.color import ColorArray
 import matplotlib.pyplot as plt
+from vispy.color import Colormap
 
 
 def main():
@@ -47,28 +48,32 @@ def main():
     n = len(data)
     print(n)
     data = data[0:n, :]
-    print("Truncated " + str(time.time()- start))
+    print("Truncated " +  str(round(time.time() - start, 2)) + " secs")
 
     # Instantiate classes
     # Find max r in survey, for setting threshold
     # print("MAX: " + str(np.amax(des._get_r())))
 
     if(dataset == "full"):
-        des = Survey(data[:, 0], data[:, 1], data[:, 6], threshold = 0.9)
+        des = Survey(data[:, 0], data[:, 1], data[:, 6], colour_diff = data[:,2] - data[:,3], threshold = 0.9)
     else:
         des = Survey(data[:, 0], data[:, 1], data[:, 2], threshold = 0.9)
 
 
 
     cam = Camera(des)
-    cam.translate(-1,-0.1,0,0,0)
-    vispy_plot(des, cam)
+    start_x = -1
+    start_y = -0.2
+    start_theta = np.pi/8
+    cam.translate(start_x,start_y,0,0,0)
+
+    vispy_plot(des, cam, dataset, start_x, start_y, start_theta)
     #matplotlib_plot(des,cam)
 
     print(str(n) + " points executed in: " + str(round(time.time() - start, 2)) + "secs")
 
-def vispy_plot(des, cam):
-    points = np.zeros((des.length, 2))
+def vispy_plot(des, cam, dataset, start_x, start_y, start_theta):
+    points = np.zeros((des.length, 3))
     canvas = vispy.scene.SceneCanvas()
     view = canvas.central_widget.add_view()
 
@@ -84,29 +89,29 @@ def vispy_plot(des, cam):
     view.camera.distance = 0
 
     writer = imageio.get_writer('outputs/vispy_animation.gif')
-    max_i = 100
+    max_i = 10
     for i in range(max_i):
 
         print(str(cam.x) + " " + str(cam.y)+ " " + str(cam.z))
-#        if (i < 15):
-#            cam.translate(0,0,0,0.001,0.001)
-#        elif(i<20):
-#            cam.translate(0.001,0.0001,0,0,0)
-#        else:
-#            cam.translate(0.001,0.0001,0,0,0)
-        dx = 0.02
-        dy = 0.002
-#        if (i< max_i/2):
-#            dy = 0.002
-#        else:
-#            dy = -0.002
+        dx = -start_x*2/max_i
+        dy = -start_y*2/max_i
+        dphi = -start_theta*2/max_i
 
+        cam.translate(dx,dy,0,0,dphi)
 
-        cam.translate(dx,dy,0,0,0)
         points[:,0] = cam.proj_x()
         points[:,1] = cam.proj_y()
-        scatter.set_data(points, edge_color=None, face_color=ColorArray(des.colours), size=5*des.size)
-        #scatter.set_data(points, edge_width=None, edge_width_rel=0.5, edge_color='red', face_color="white", size=20*des.size)
+#        points[:,0] = des.xs
+#        points[:,1] = des.ys
+#        points[:,2] = des.zs
+
+        cm = Colormap(['r','r','w','b','b'], controls=[0.0,des.mean-des.std,des.mean,des.mean + des.std, 1.0], interpolation='linear')
+
+        if(dataset =='full'):
+            scatter.set_data(points, edge_color=None, face_color=cm[des.colour_diff], size=5*des.size)
+        else:
+            scatter.set_data(points, edge_color=None, face_color=ColorArray(des.colours), size=5*des.size)
+
         im = canvas.render()
         writer.append_data(im)
     writer.close()
@@ -123,25 +128,7 @@ def matplotlib_plot(des, cam):
     fig.canvas.draw()
 
     ### Observer moves out - set to 100 for a nice video
-    for i in range(0, 20):
-        print("start " + str(time.time() - start))
-        ax.clear()
-        ax.set_xlim(-1, 1)
-        ax.set_ylim(-1, 1)
-
-        ax.scatter(cam.proj_x(), cam.proj_y(), c=des.colours, s=100*des.size)
-        print("scattered " + str(time.time() - start))
-
-        plt.draw()
-        print("drawn " + str(time.time() - start))
-
-        #save to file
-        name_out = "refactored"
-        fig.savefig("outputs/" + name_out + "{0:0=3d}".format(i), dpi = 100)
-
-
-        print("saved " + str(time.time() - start))
-
+    for i in range(0, 1):
 
         if (i < 15):
             cam.translate(0, 0, 0, 0.01, 0.01)
@@ -149,6 +136,17 @@ def matplotlib_plot(des, cam):
             cam.translate(0.001, 0, 0, 0.01, 0.01)
         else:
             cam.translate(0.001, 0, 0, 0, 0)
+
+        ax.clear()
+        ax.set_xlim(-1, 1)
+        ax.set_ylim(-1, 1)
+
+        ax.scatter(cam.proj_x(), cam.proj_y(), c=des.colours, s=100*des.size)
+
+        plt.draw()
+        #save to file
+        name_out = "refactored"
+        fig.savefig("outputs/" + name_out + "{0:0=3d}".format(i), dpi = 100)
 
 #        plt.cla()
         print(i)
@@ -158,7 +156,7 @@ def matplotlib_plot(des, cam):
 
 if __name__ == "__main__":
     start = time.time()
-    print(start)
+    print("Start ", time.asctime(time.localtime(start)) )
     main()
 
 

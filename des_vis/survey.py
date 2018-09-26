@@ -9,7 +9,7 @@ import numpy as np
 import sys
 
 class Survey(object):
-    def __init__(self, ras, decs, zs, threshold = sys.maxsize):
+    def __init__(self, ras, decs, zs, colour_diff = None, threshold = sys.maxsize):
         """
         The plotting data for points in a survey. Points are stored taken in
         equatorial coords but stored as Cartesian coordinates.
@@ -32,17 +32,31 @@ class Survey(object):
         self._full_length = len(self._full_xs)
 
 
-        # Reorder based on radius
-        idx = np.argsort(self._get_r())
-        self._full_xs = self._full_xs[idx]
-        self._full_ys = self._full_ys[idx]
-        self._full_zs = self._full_zs[idx]
 
-        # Random colours
+
+
+        # Reorder based on radius
+#        idx = np.argsort(self._get_r())
+#        self._full_xs = self._full_xs[idx]
+#        self._full_ys = self._full_ys[idx]
+#        self._full_zs = self._full_zs[idx]
+
         self._full_colours = np.zeros((self._full_length, 4))
-        self._full_colours[:,0] = np.random.rand(self._full_length)
-        self._full_colours[:,1] = np.random.rand(self._full_length)
-        self._full_colours[:,2] = np.random.rand(self._full_length)
+
+        if (colour_diff is not None):
+            self.colour_diff = (colour_diff - min(colour_diff))/(max(colour_diff)-min(colour_diff))
+            self.std = np.std(self.colour_diff)
+            self.mean = np.mean(self.colour_diff)
+
+
+
+
+        else:
+            # Random colours
+
+            self._full_colours[:,0] = np.random.rand(self._full_length)
+            self._full_colours[:,1] = np.random.rand(self._full_length)
+            self._full_colours[:,2] = np.random.rand(self._full_length)
 
 
 
@@ -54,19 +68,18 @@ class Survey(object):
         Returns theta [rads] of each point expressed in spherical coords.
         (Note, theta is the azimuthal angle in the x-y plane, 0 < theta < 2pi)
         """
-        self.xs = self._full_xs#[self._get_r() < self._threshold]
-        self.ys = self._full_ys#[self._get_r() < self._threshold]
-        self.zs = self._full_zs#[self._get_r() < self._threshold]
+        self.xs = self._full_xs
+        self.ys = self._full_ys
+        self.zs = self._full_zs
 
-        self._full_colours[:, 3] =1# 1/(50*pow(self._get_r(),2)+1)
-        self.colours = self._full_colours#[self._get_r() < self._threshold]
+        self._full_colours[:, 3] =1 # 1/(50*pow(self._get_r(),2)+1)
+        self.colours = self._full_colours
 
         # Number of points below the threshold
         self.length = len(self.xs)
 
         # Plotting sizes of points
         self.size = 1/(15*pow(self._get_r(),2)+1)
-        #self.size = 5*(1 - self._get_r()[self._get_r() < self._threshold]/self._threshold)
 
     def _get_theta(self):
         """
