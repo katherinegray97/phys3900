@@ -19,6 +19,7 @@ full_data = full_data[~np.isnan(full_data).any(axis=1)]
 thin_data = thin_data[~np.isnan(thin_data).any(axis=1)]
 
 full_data = full_data[full_data[:,8] != 0]
+np.random.shuffle(full_data)
 
 full = open("data/full_data", mode="wb")
 thin = open("data/thin_data", mode="wb")
@@ -30,3 +31,4 @@ full.close()
 thin.close()
 
 
+spi/
