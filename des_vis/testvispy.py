@@ -48,7 +48,7 @@ def main():
     fp.close()
 
     # Truncate data
-    n = len(data)//10
+    n = len(data)//100
     print(n)
     data = data[0:n, :]
     print("Truncated " +  str(round(time.time() - start, 2)) + " secs")
@@ -64,6 +64,20 @@ def main():
 
     des = Survey(data[:, 0], data[:, 1], data[:, 2], threshold = 0.9)
 
+
+
+
+    data = np.zeros((50, 3))
+    data[:,0] = np.linspace(0,10,num = 50)
+    data[:,1] = data[:,0]
+    data[:,2] = -10000
+
+
+    des = Survey(data[:, 0], data[:, 1], data[:, 2], threshold = 0.9, xs = data[:, 0], ys = data[:, 1], true_zs = data[:, 2])
+
+
+
+
     cam = Camera(des)
     start_x =0# -1
     start_y = 0#-0.2
@@ -77,12 +91,10 @@ def main():
     scatter = visuals.Markers()
     scatter.set_data(points)
     view.add(scatter)
-
-    view.camera = "turntable"
-    view.camera.centre = (0,0,0)
-    view.camera.azimuth = 0
-    view.camera.elevation = 0
-    view.camera.set_range(y=(0.38,1), margin = 0)
+    view.camera = 'panzoom'
+    view.camera.center = (0,0,0)
+    view.camera.fov = 70
+    view.camera.set_range(x=(-10,10), y =(-10,10))
     print(view.camera.get_state())
 
     axis = visuals.XYZAxis(parent=view.scene)
@@ -99,7 +111,7 @@ def main():
         points[:,2] = des.zs
 
 
-        scatter.set_data(points, alpha = 0)
+        scatter.set_data(points)
 
         im = canvas.render()
         writer.append_data(im)
