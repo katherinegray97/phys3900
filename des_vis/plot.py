@@ -35,6 +35,7 @@ def main():
             os.remove(os.path.join(root, file))
 
     dataset = "full"
+
     # Load data
     if(dataset == "full"):
         fp = open("data/full_data", mode = "rb")
@@ -62,8 +63,8 @@ def main():
 
 
     cam = Camera(des)
-    start_x = -1
-    start_y = -0.2
+    start_x =0# -1
+    start_y = 0#-0.2
     start_theta = np.pi/8
     cam.translate(start_x,start_y,0,0,0)
 
@@ -81,7 +82,7 @@ def vispy_plot(des, cam, dataset, start_x, start_y, start_theta):
     scatter.set_data(points)
     view.add(scatter)
 
-    view.camera = 'panzoom'
+    view.camera = 'base'
     view.camera.center = (0,0,0)
     view.camera.fov = 70
     view.camera.azimuth = 0
@@ -89,7 +90,7 @@ def vispy_plot(des, cam, dataset, start_x, start_y, start_theta):
     view.camera.distance = 0
 
     writer = imageio.get_writer('outputs/vispy_animation.gif')
-    max_i = 10
+    max_i = 100
     for i in range(max_i):
 
         print(str(cam.x) + " " + str(cam.y)+ " " + str(cam.z))

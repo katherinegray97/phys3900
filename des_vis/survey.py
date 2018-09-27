@@ -9,7 +9,7 @@ import numpy as np
 import sys
 
 class Survey(object):
-    def __init__(self, ras, decs, zs, colour_diff = None, threshold = sys.maxsize):
+    def __init__(self, ras, decs, zs, colour_diff = None, threshold = sys.maxsize, xs = None, ys = None, true_zs = None):
         """
         The plotting data for points in a survey. Points are stored taken in
         equatorial coords but stored as Cartesian coordinates.
@@ -33,7 +33,10 @@ class Survey(object):
 
 
 
-
+        if(xs is not None):
+            self._full_xs = xs
+            self._full_ys = ys
+            self._full_zs = zs
 
         # Reorder based on radius
 #        idx = np.argsort(self._get_r())
