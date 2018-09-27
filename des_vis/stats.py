@@ -36,7 +36,7 @@ def main():
 
     plt.xlabel('g-r [magnitudes]')
     plt.ylabel('Probability')
-    plt.title('Histogram of apparent magnitude through g-r')
+    plt.title('Difference in apparent magnitude through green and red filters')
     plt.grid(True)
     fig.savefig("outputs/hist")
 

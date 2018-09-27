@@ -38,11 +38,11 @@ class Survey(object):
             self._full_ys = ys
             self._full_zs = zs
 
-        # Reorder based on radius
-#        idx = np.argsort(self._get_r())
-#        self._full_xs = self._full_xs[idx]
-#        self._full_ys = self._full_ys[idx]
-#        self._full_zs = self._full_zs[idx]
+#       Reorder based on radius
+        idx = np.argsort(self._get_r())
+        self._full_xs = self._full_xs[idx]
+        self._full_ys = self._full_ys[idx]
+        self._full_zs = self._full_zs[idx]
 
         self._full_colours = np.zeros((self._full_length, 4))
 
@@ -50,9 +50,6 @@ class Survey(object):
             self.colour_diff = (colour_diff - min(colour_diff))/(max(colour_diff)-min(colour_diff))
             self.std = np.std(self.colour_diff)
             self.mean = np.mean(self.colour_diff)
-
-
-
 
         else:
             # Random colours

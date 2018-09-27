@@ -46,7 +46,7 @@ def main():
     fp.close()
 
     # Truncate data
-    n = len(data)
+    n = 2266961#len(data)//
     print(n)
     data = data[0:n, :]
     print("Truncated " +  str(round(time.time() - start, 2)) + " secs")
@@ -65,10 +65,10 @@ def main():
     start_y = 0
     start_theta = 0
 
-    vispy_plot(des, cam, dataset, start_x, start_y, start_theta)
-    #matplotlib_plot(des,cam)
+    #vispy_plot(des, cam, dataset, start_x, start_y, start_theta)
+    matplotlib_plot(des,cam)
 
-    print(str(n) + " points executed in: " + str(round(time.time() - start, 2)) + "secs")
+    print(str(n), str(round(time.time() - start, 2)))
 
 def vispy_plot(des, cam, dataset, start_x, start_y, start_theta):
     points = np.zeros((des.length, 3))
@@ -82,16 +82,16 @@ def vispy_plot(des, cam, dataset, start_x, start_y, start_theta):
     view.camera = 'panzoom'
     view.camera.center = (0,0,0)
     view.camera.fov = 70
-    view.camera.set_range(x=(0,1), y =(0,1))
+    view.camera.set_range(x=(-0.5,0.5), y =(-0.5,0.5))
 
     writer = imageio.get_writer('outputs/vispy_animation.gif')
-    max_i = 200
+    max_i =1
     for i in range(max_i):
 
-        print(str(cam.x) + " " + str(cam.y)+ " " + str(cam.z))
-        dx = 2/max_i
-        dy = 2/max_i
-        dphi = -start_theta*2/max_i
+        #print(str(cam.x) + " " + str(cam.y)+ " " + str(cam.z))
+        dx = 0.001
+        dy = 0
+        dphi = 0
 
         cam.translate(dx,dy,0,0,dphi)
 
@@ -144,8 +144,8 @@ def matplotlib_plot(des, cam):
         fig.savefig("outputs/" + name_out + "{0:0=3d}".format(i), dpi = 100)
 
 #        plt.cla()
-        print(i)
-    os.system("./ffmpeg.sh " + name_out + " "+ name_out )
+        #print(i)
+    #os.system("./ffmpeg.sh " + name_out + " "+ name_out )
 
 
 
