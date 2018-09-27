@@ -3,6 +3,7 @@
 
 This aim of this project is to create a fly-through visualisation of the [Dark Energy Survey](https://www.darkenergysurvey.org/the-des-project/overview/). 
 
+## Usage
 Note that this repository does not contain data. Data should be loaded into a pickle data stream using load_data.py. 
 
 plot.py can then be used to create fly-through simulation. plot.py takes command line arguments of: 
