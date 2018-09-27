@@ -11,6 +11,19 @@ import numpy as np
 
 class Camera(object):
     def __init__(self, survey, v_x = 1920, v_y = 1080, fov = 70):
+        """
+        A camera that can be moved through a survey.
+
+        Params
+        survey: survey
+            the survey of points
+        vx: float
+            camera view width
+        vy: float
+            camera view height
+        fov: float
+            camera field of view
+        """
         self.survey = survey
         self.v_x = v_x
         self.v_y = v_y
@@ -26,9 +39,15 @@ class Camera(object):
         self.phi = 0
 
     def proj_x(self):
+        """
+        Returns a 2D projection of 3D points in the x axis
+        """
         return np.arctan2(self.survey.ys, self.survey.xs) / np.tan(self.fov_w)
 
     def proj_y(self):
+        """
+        Returns a 2D projection of 3D points in the y axis
+        """
         return np.arctan2(self.survey.zs, self.survey.xs) / np.tan(self.fov_h)
 
     def _get_theta(self):
@@ -74,14 +93,14 @@ class Camera(object):
         self.z += z
 
         # Get new radii
-#        r = self._get_r()
-#
-#        # Rotate
-#        theta = self._get_theta() + theta
-#        phi = self._get_phi() + phi
-#
-#        # Set rotation
-#        self.x = r*np.cos(theta)*np.sin(phi)
-#        self.y = r*np.sin(theta)*np.sin(phi)
-#        self.z = r*np.cos(phi)
+        r = self._get_r()
+
+        # Rotate
+        theta = self._get_theta() + theta
+        phi = self._get_phi() + phi
+
+        # Set rotation
+        self.x = r*np.cos(theta)*np.sin(phi)
+        self.y = r*np.sin(theta)*np.sin(phi)
+        self.z = r*np.cos(phi)
 

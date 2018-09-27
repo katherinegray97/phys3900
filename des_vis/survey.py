@@ -9,7 +9,7 @@ import numpy as np
 import sys
 
 class Survey(object):
-    def __init__(self, ras, decs, zs, colour_diff = None, threshold = sys.maxsize, xs = None, ys = None, true_zs = None):
+    def __init__(self, ras, decs, zs, colour_diff = None, cart_xs = None, cart_ys = None, cart_zs = None):
         """
         The plotting data for points in a survey. Points are stored taken in
         equatorial coords but stored as Cartesian coordinates.
@@ -21,8 +21,16 @@ class Survey(object):
             decslination of each point
         zs:   np.ndarray
             redshift of each point
+        colour_diff:   np.ndarray
+            colour difference data of each point, if not supplied points will have random colour
+        cart_xs:   np.ndarray
+            cartesian x coordinates to override the equatorial coords (used for supplying dummy data)
+        cart_ys:   np.ndarray
+            cartesian y coordinates to override the equatorial coords (used for supplying dummy data)
+        cart_zs:   np.ndarray
+            cartesian z coordinates to override the equatorial coords (used for supplying dummy data)
         """
-        self._threshold = threshold
+
         # Cartersion coord system
         decs = np.pi / 2 - decs
         self._full_xs = np.sin(ras) * np.sin(decs) * zs
@@ -31,14 +39,12 @@ class Survey(object):
 
         self._full_length = len(self._full_xs)
 
+        if(cart_xs is not None):
+            self._full_xs = cart_xs
+            self._full_ys = cart_ys
+            self._full_zs = cart_zs
 
-
-        if(xs is not None):
-            self._full_xs = xs
-            self._full_ys = ys
-            self._full_zs = zs
-
-#       Reorder based on radius
+        # Reorder points based on radius
         idx = np.argsort(self._get_r())
         self._full_xs = self._full_xs[idx]
         self._full_ys = self._full_ys[idx]
@@ -50,16 +56,11 @@ class Survey(object):
             self.colour_diff = (colour_diff - min(colour_diff))/(max(colour_diff)-min(colour_diff))
             self.std = np.std(self.colour_diff)
             self.mean = np.mean(self.colour_diff)
-
         else:
             # Random colours
-
             self._full_colours[:,0] = np.random.rand(self._full_length)
             self._full_colours[:,1] = np.random.rand(self._full_length)
             self._full_colours[:,2] = np.random.rand(self._full_length)
-
-
-
 
         self._reset_perspective()
 
@@ -72,6 +73,7 @@ class Survey(object):
         self.ys = self._full_ys
         self.zs = self._full_zs
 
+        # Uncomment to implement alpha values
         self._full_colours[:, 3] =1 # 1/(50*pow(self._get_r(),2)+1)
         self.colours = self._full_colours
 
