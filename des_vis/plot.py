@@ -127,7 +127,7 @@ if __name__ == "__main__":
     if(len(sys.argv) > 1 and len(sys.argv) is not 4):
         print("Please enter the program settings: \n"+
               "1. an appropriate choice of plotting library - 'vispy' or 'matplotlib'\n"+
-              "2. An integer for plotting the full dataset divided by that number.\n"+
+              "2. An integer to divde the dataset by for quick plotting of a random subset of data\n"+
               "3. An integer number of frames to plot")
         exit()
     elif (len(sys.argv) > 1):
