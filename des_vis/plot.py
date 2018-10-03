@@ -57,7 +57,7 @@ def vispy_plot(des, cam):
     view.camera.set_range(x=(-0.5,0.5), y =(-0.5,0.5))
 
     # Colour map for points
-    cm = Colormap(['r','r','w','b','b'],
+    cm = Colormap(['b','b','w','r','r'],
                   controls = [0.0, des.mean-des.std, des.mean, des.mean + des.std, 1.0],
                   interpolation='linear')
 
