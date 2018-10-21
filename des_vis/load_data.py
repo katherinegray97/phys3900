@@ -6,6 +6,9 @@ import numpy as np
 if __name__ == "__main__":
 
     # Import data
+    # Data format should be a numpy object with the following columns"
+    # (Note that the format - units etc. - should exactly correspond to that of the columns in the Dark Energy Survey Y3 gold catalogue.)
+    # RA | DEC | MU_MEAN_MODEL_G | MU_MEAN_MODEL_R | MU_MEAN_MODEL_I | MU_MEAN_MODEL_Z | DNF_ZMC_MOF | DNF_ZMC_SOF | EXTENDED_CLASS_COADD
     full_data = np.load("data/des.npy")
 
     # Clean data, remove nans and stars
