@@ -14,6 +14,7 @@ if __name__ == "__main__":
     # Clean data, remove nans and stars
     full_data = full_data[~np.isnan(full_data).any(axis=1)]
     full_data = full_data[full_data[:,8] != 0]
+    full_data = full_data[full_data[:,8] != 1]
 
     # Shuffle data to ensure random subset when truncating
     np.random.shuffle(full_data)
