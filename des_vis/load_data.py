@@ -6,7 +6,7 @@ import numpy as np
 if __name__ == "__main__":
 
     # Import data
-    full_data = np.load("data/full_des.npy")
+    full_data = np.load("data/des.npy")
 
     # Clean data, remove nans and stars
     full_data = full_data[~np.isnan(full_data).any(axis=1)]
